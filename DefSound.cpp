@@ -25,15 +25,15 @@ const PCWSTR g_wszApplicationName = L"DefSound: Select Default Sound Render Devi
 
 // ----------------------------------------------------------------------------
 
-INT RunTrayMode(__in HINSTANCE hInstance)
+INT RunTrayMode(HINSTANCE hInstance)
 {
-    CTrayApp TrayApp(g_wszApplicationName);
-    return TrayApp.Run(hInstance);
+    CTrayApp TrayApp(hInstance, g_wszApplicationName);
+    return TrayApp.Run();
 }
 
 // ----------------------------------------------------------------------------
 
-INT RunCommandLineMode(const CCommandLine &CommandLine)
+INT RunCommandLineMode(HINSTANCE hInstance, const CCommandLine &CommandLine)
 {
     CEndpointCollection EndpointCollection;
 
@@ -49,9 +49,14 @@ INT RunCommandLineMode(const CCommandLine &CommandLine)
     if (EndpointCollection.Get().empty())
         throw CError( L"There are no audio endpoints", ERROR_SUCCESS );
 
+    CHint Hint(hInstance);
+
     if (pArguments->m_DeviceIndexes.empty())
     {
-        EndpointCollection.SetDefaultNext(pArguments->m_Role);
+        const auto nEndpointIndex = 
+            EndpointCollection.SetDefaultNext(pArguments->m_Role);
+        if (nEndpointIndex != -1)
+            Hint.Show(EndpointCollection.Get()[nEndpointIndex]);
     }
     else
     {
@@ -60,6 +65,7 @@ INT RunCommandLineMode(const CCommandLine &CommandLine)
             try
             {
                 EndpointCollection.SetDefault(nIndex, pArguments->m_Role);
+                Hint.Show(EndpointCollection.Get()[nIndex]);
                 break;
             }
             catch (const CError &Error)
@@ -134,11 +140,28 @@ INT WinMainImpl(__in HINSTANCE hInstance)
         };
         CCoInitialize CoInitializeScoped;
 
+        struct CGdiplusInitialize
+        {
+            CGdiplusInitialize()
+            {
+                ::GdiplusStartupInput Input;
+                const auto Status = ::GdiplusStartup(&m_Token, &Input, nullptr);
+                if (Status != Ok)
+                    throw CError( MakeDefaultErrorDescription(L"::CoInitialize"), Status );
+            }
+            ~CGdiplusInitialize()
+            {
+                ::GdiplusShutdown(m_Token);
+            }
+            ULONG_PTR m_Token;
+        };
+        CGdiplusInitialize GdiplusInitializeScoped;
+
         CCommandLine CommandLine;
         if (CommandLine.IsTrayMode())
             return RunTrayMode(hInstance);
 
-        return RunCommandLineMode(CommandLine);
+        return RunCommandLineMode(hInstance, CommandLine);
     }
     catch (const CError &Error)
     {

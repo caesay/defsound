@@ -20,9 +20,9 @@ namespace DefSound {
 class CTrayApp
 {
 public:
-    explicit CTrayApp(PCWSTR wszApplicationName);
+    explicit CTrayApp(HINSTANCE hInstance, PCWSTR wszApplicationName);
 
-    INT Run(__in HINSTANCE hInstance);
+    INT Run();
 
 protected:
     // Window message IDs
@@ -69,6 +69,7 @@ private:
     CTrayWindow m_Window;
     CTrayIcon m_Icon;
     CEndpointMenu m_EndpointMenu;
+    HINSTANCE m_hInstance;
 };
 
 // ----------------------------------------------------------------------------

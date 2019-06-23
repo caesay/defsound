@@ -28,22 +28,24 @@ const PCWSTR g_wszExitText = L"Exit";
 
 // ----------------------------------------------------------------------------
 
-CTrayApp::CTrayApp(PCWSTR wszApplicationName)
+CTrayApp::CTrayApp(HINSTANCE hInstance, PCWSTR wszApplicationName)
     : m_wszApplicationName(wszApplicationName)
+    , m_EndpointMenu(hInstance)
+    , m_hInstance(hInstance)
 {
 }
 
 // ----------------------------------------------------------------------------
 
-INT CTrayApp::Run(__in HINSTANCE hInstance)
+INT CTrayApp::Run()
 {
     if (CTrayWindow::IsAlreadyExist(m_wszApplicationName))
         return ERROR_ALREADY_EXISTS;
 
-    m_Window.Create(m_wszApplicationName, hInstance, CTrayApp::WndProc);
+    m_Window.Create(m_wszApplicationName, m_hInstance, CTrayApp::WndProc);
     ::SetWindowLongPtr(m_Window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
-    m_Icon.Create(hInstance, m_wszApplicationName, m_Window, Message::TrayIcon);
+    m_Icon.Create(m_hInstance, m_wszApplicationName, m_Window, Message::TrayIcon);
 
     m_Window.RunMessageLoop();
 
@@ -63,7 +65,6 @@ LRESULT CALLBACK CTrayApp::WndProc(
     {
         switch (nMessage)
         {
-
         case WM_DESTROY:
             ::PostQuitMessage(ERROR_SUCCESS);
             break;
@@ -90,6 +91,8 @@ LRESULT CALLBACK CTrayApp::WndProc(
         throw;
 #endif  // DEBUG
     }
+
+    _ASSERT(nMessage != WM_CLOSE);
     return ::DefWindowProc(hWindow, nMessage, wParam, lParam);
 }
 

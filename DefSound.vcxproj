@@ -89,6 +89,10 @@
     <ClInclude Include="DefSoundEndpointRole.h" />
     <ClInclude Include="DefSoundError.h" />
     <ClInclude Include="DefSoundHelpMessage.h" />
+    <ClInclude Include="DefSoundHint.h" />
+    <ClInclude Include="DefSoundHintWindow.h" />
+    <ClInclude Include="DefSoundHintWindowClass.h" />
+    <ClInclude Include="DefSoundHintThread.h" />
     <ClInclude Include="DefSoundTrayApp.h" />
     <ClInclude Include="DefSoundTrayIcon.h" />
     <ClInclude Include="DefSoundTrayEndpointMenu.h" />
@@ -104,6 +108,10 @@
     <ClCompile Include="DefSoundEndpointRole.cpp" />
     <ClCompile Include="DefSoundError.cpp" />
     <ClCompile Include="DefSoundHelpMessage.cpp" />
+    <ClCompile Include="DefSoundHint.cpp" />
+    <ClCompile Include="DefSoundHintWindow.cpp" />
+    <ClCompile Include="DefSoundHintWindowClass.cpp" />
+    <ClCompile Include="DefSoundHintThread.cpp" />
     <ClCompile Include="DefSoundTrayApp.cpp" />
     <ClCompile Include="DefSoundTrayIcon.cpp" />
     <ClCompile Include="DefSoundTrayEndpointMenu.cpp" />

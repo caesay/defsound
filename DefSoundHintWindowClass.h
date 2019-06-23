@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------------
-// DefSoundTrayWindowApp.h
-// Invisible window for system tray icon
+// DefSoundHintWindowClass.h
+// DefSound Hint Window Class
 // ----------------------------------------------------------------------------
 
 #pragma once
@@ -11,29 +11,19 @@ namespace DefSound {
 
 // ----------------------------------------------------------------------------
 
-class CTrayWindow
+class CHintWindowClass
 {
 public:
-    CTrayWindow();
-    ~CTrayWindow();
+    CHintWindowClass(HINSTANCE hInstance, WNDPROC WndProc, int nWndExtra);
+    ~CHintWindowClass();
 
-    static bool IsAlreadyExist(__in PCWSTR wszApplicationName);
+    static PCWSTR GetName();
+    static UINT GetNameLength();
 
-    void Create(
-        __in PCWSTR wszApplicationName,
-        __in HINSTANCE hInstance,
-        __in WNDPROC pWndProc
-    );
-
-    void RunMessageLoop();
-
-    void TrackPopupMenu(HMENU hMenu) const;
-
-    void Close();
-
-    operator HWND() const;
 private:
-    HWND m_hWindow;
+    static WCHAR g_wszName[];
+
+    HINSTANCE m_hInstance;
 };
 
 // ----------------------------------------------------------------------------
@@ -41,3 +31,5 @@ private:
 }   // namespace DefSound
 
 // ----------------------------------------------------------------------------
+
+

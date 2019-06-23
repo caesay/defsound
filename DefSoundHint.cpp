@@ -1,13 +1,12 @@
 // ----------------------------------------------------------------------------
-// DefSoundTrayEndpointMenu.h
-// Popup menu
+// DefSoundHint.cpp
+// DefSound Hint (balloon)
 // ----------------------------------------------------------------------------
 
-#pragma once
+#include "stdafx.h"
 
 // ----------------------------------------------------------------------------
 
-#include "DefSoundEndpointColl.h"
 #include "DefSoundHint.h"
 
 // ----------------------------------------------------------------------------
@@ -16,31 +15,31 @@ namespace DefSound {
 
 // ----------------------------------------------------------------------------
 
-class CEndpointMenu
+CHint::CHint(HINSTANCE hInstance)
+    : m_hInstance(hInstance)
 {
-public:
-    CEndpointMenu(__in HINSTANCE hInstance);
+}
 
-    typedef std::unique_ptr<::HMENU__, decltype(&::DestroyMenu)> CMenuHolder;
+// ----------------------------------------------------------------------------
 
-    void BuildPopupMenu(
-        __in HMENU hMainMenu,
-        __in UINT_PTR nFirstEndpointId,
-        __out std::list< CMenuHolder > &EndpointMenuHolder
+void CHint::Show(const CEndpoint &Endpoint)
+{
+    std::unique_ptr< CHintThread > pHintThread(
+        new CHintThread(
+            Endpoint.m_DeviceClassIconPath,
+            Endpoint.m_DeviceDesc,
+            m_hInstance,
+            m_pHintWindowClass)
     );
 
-    bool OnCommandEndpoint(WORD nMenuItemNumber);
-
-    void OnCommandNextEndpoint();
-
-private:
-    CEndpointCollection m_EndpointCollection;
-    CHint m_Hint;
-};
+    m_pHintThread.swap(pHintThread);
+    m_pHintThread->Start();
+}
 
 // ----------------------------------------------------------------------------
 
 }   // namespace DefSound
 
 // ----------------------------------------------------------------------------
+
 

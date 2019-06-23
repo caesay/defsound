@@ -26,6 +26,13 @@ const PCWSTR g_wszNoAudioEndpointsText = L"No audio endpoints";
 
 // ----------------------------------------------------------------------------
 
+CEndpointMenu::CEndpointMenu(__in HINSTANCE hInstance)
+    : m_Hint(hInstance)
+{
+}
+
+// ----------------------------------------------------------------------------
+
 void CEndpointMenu::BuildPopupMenu(
     __in HMENU hMainMenu,
     __in UINT_PTR nFirstEndpointId,
@@ -88,7 +95,7 @@ void CEndpointMenu::BuildPopupMenu(
 
 // ----------------------------------------------------------------------------
 
-bool CEndpointMenu::OnCommandEndpoint(WORD nMenuItemNumber) const
+bool CEndpointMenu::OnCommandEndpoint(WORD nMenuItemNumber)
 {
     _ASSERT(nMenuItemNumber < m_EndpointCollection.Get().size() * CEndpointRole::CountOf);
     if (nMenuItemNumber >= m_EndpointCollection.Get().size() * CEndpointRole::CountOf)
@@ -102,6 +109,8 @@ bool CEndpointMenu::OnCommandEndpoint(WORD nMenuItemNumber) const
     else
         m_EndpointCollection.SetDefault(nEndpointIndex, static_cast<::ERole>(nRoleIndex - 1));
 
+    m_Hint.Show(m_EndpointCollection.Get()[nEndpointIndex]);
+
     return true;
 }
 
@@ -110,7 +119,10 @@ bool CEndpointMenu::OnCommandEndpoint(WORD nMenuItemNumber) const
 void CEndpointMenu::OnCommandNextEndpoint()
 {
     m_EndpointCollection.Refresh();
-    m_EndpointCollection.SetDefaultNext(GetEndpointAllRoles().m_RoleValue);
+    const auto nEndpointIndex = 
+        m_EndpointCollection.SetDefaultNext(GetEndpointAllRoles().m_RoleValue);
+    if (nEndpointIndex != -1)
+        m_Hint.Show(m_EndpointCollection.Get()[nEndpointIndex]);
 }
 
 // ----------------------------------------------------------------------------

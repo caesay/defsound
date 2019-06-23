@@ -273,17 +273,24 @@ void CEndpointCollection::SetDefault(__in size_t nIndex, ERole Role) const
 
 // ----------------------------------------------------------------------------
 
-void CEndpointCollection::SetDefaultNext(__in ERole Role) const
+INT_PTR CEndpointCollection::SetDefaultNext(__in ERole Role) const
 {
     if (m_pImpl->size() < 2)
-        return;
+        return -1;
 
     auto it = std::find_if(m_pImpl->begin(), m_pImpl->end(), CIsDefaultEndpoint(Role));
     if (it == m_pImpl->end())
-        return;
+        return -1;
 
     ++it;
-    SetDefaultEndpoint((it == m_pImpl->end()) ? *m_pImpl->begin() : *it, Role);
+    if (it == m_pImpl->end())
+    {
+        SetDefaultEndpoint(*m_pImpl->begin(), Role);
+        return 0;
+    }
+
+    SetDefaultEndpoint(*it, Role);
+    return std::distance(m_pImpl->begin(), it);
 }
 
 // ----------------------------------------------------------------------------

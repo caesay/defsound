@@ -57,6 +57,18 @@
     <ClInclude Include="DefSoundTrayEndpointMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DefSoundHint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DefSoundHintWindowClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DefSoundHintWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DefSoundHintThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DefSound.cpp">
@@ -88,6 +100,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DefSoundTrayEndpointMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DefSoundHint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DefSoundHintWindowClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DefSoundHintWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DefSoundHintThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

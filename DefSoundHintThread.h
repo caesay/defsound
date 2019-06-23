@@ -1,14 +1,13 @@
 // ----------------------------------------------------------------------------
-// DefSoundTrayEndpointMenu.h
-// Popup menu
+// DefSoundHintThread.h
+// DefSound Hint Thread (show window)
 // ----------------------------------------------------------------------------
 
 #pragma once
 
 // ----------------------------------------------------------------------------
 
-#include "DefSoundEndpointColl.h"
-#include "DefSoundHint.h"
+#include "DefSoundHintWindow.h"
 
 // ----------------------------------------------------------------------------
 
@@ -16,26 +15,28 @@ namespace DefSound {
 
 // ----------------------------------------------------------------------------
 
-class CEndpointMenu
+class CHintThread
 {
 public:
-    CEndpointMenu(__in HINSTANCE hInstance);
-
-    typedef std::unique_ptr<::HMENU__, decltype(&::DestroyMenu)> CMenuHolder;
-
-    void BuildPopupMenu(
-        __in HMENU hMainMenu,
-        __in UINT_PTR nFirstEndpointId,
-        __out std::list< CMenuHolder > &EndpointMenuHolder
+    CHintThread(
+        const std::wstring &Icon,
+        const std::wstring &Text,
+        HINSTANCE hInstance,
+        std::unique_ptr< CHintWindowClass > &pHintWindowClass
     );
+    ~CHintThread();
 
-    bool OnCommandEndpoint(WORD nMenuItemNumber);
+    void Start();
 
-    void OnCommandNextEndpoint();
+protected:
+    void ThreadProc();
+    static unsigned __stdcall ThreadProc(void *pThis);
 
-private:
-    CEndpointCollection m_EndpointCollection;
-    CHint m_Hint;
+private:    
+    std::unique_ptr<void, decltype(&::CloseHandle)> m_pEventWindowCreated;
+    std::unique_ptr<void, decltype(&::CloseHandle)> m_pThread;
+
+    CHintWindow m_HintWindow;
 };
 
 // ----------------------------------------------------------------------------
@@ -43,4 +44,3 @@ private:
 }   // namespace DefSound
 
 // ----------------------------------------------------------------------------
-

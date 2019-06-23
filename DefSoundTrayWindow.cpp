@@ -31,6 +31,16 @@ CTrayWindow::CTrayWindow()
 
 // ----------------------------------------------------------------------------
 
+CTrayWindow::~CTrayWindow()
+{
+    if (m_hWindow)
+    {
+        Close();
+    }
+}
+
+// ----------------------------------------------------------------------------
+
 bool CTrayWindow::IsAlreadyExist(__in PCWSTR wszApplicationName)
 {
     return !!::FindWindow(g_wszWindowClassName, wszApplicationName);
@@ -80,9 +90,6 @@ void CTrayWindow::RunMessageLoop()
     ::MSG Msg;
     while (::GetMessage(&Msg, NULL, 0, 0))
     {
-        if (Msg.message == WM_TIMER) 
-            Msg.hwnd = *this;
-
         ::TranslateMessage(&Msg);
         ::DispatchMessage(&Msg);
     }
@@ -108,8 +115,8 @@ void CTrayWindow::TrackPopupMenu(HMENU hMenu) const
 
 void CTrayWindow::Close()
 {
-    ::SendMessage(*this, WM_CLOSE, 0, 0);
-    ::DestroyWindow(*this);
+    VERIFY(::DestroyWindow(*this));
+    m_hWindow = nullptr;
 }
 
 // ----------------------------------------------------------------------------
