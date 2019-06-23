@@ -1,0 +1,3 @@
+// [pch]
+
+#include "stdafx.h"
