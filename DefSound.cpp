@@ -98,16 +98,16 @@ INT ShowError(const CError &Error)
             Stream << L"Error " << std::dec << Error.m_nErrorCode << std::endl;
         }
 
-        PWSTR wszMessage = NULL;
+        PWSTR wszMessage = nullptr;
         const auto FormatResult =
             ::FormatMessage(
                 FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-                NULL,
+                nullptr,
                 Error.m_nErrorCode,
                 MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
                 reinterpret_cast<PWSTR>(&wszMessage),
                 0,
-                NULL);
+                nullptr);
         if (FormatResult)
         {
             std::unique_ptr<WCHAR, decltype(&::LocalFree)> MessageHolder(wszMessage, &::LocalFree);

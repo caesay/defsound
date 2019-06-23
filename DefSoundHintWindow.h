@@ -48,7 +48,7 @@ private:
     std::wstring m_Icon;
     std::wstring m_Text;
 
-    HWND m_hWindow;
+    HWND m_hWindow = nullptr;
 };
 
 // ----------------------------------------------------------------------------

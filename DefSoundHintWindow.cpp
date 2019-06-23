@@ -59,7 +59,6 @@ CHintWindow::CHintWindow(
     std::unique_ptr< CHintWindowClass > &pHintWindowClass
 )   : m_Icon(Icon)
     , m_Text(Text)
-    , m_hWindow(nullptr)
 {
     if (!pHintWindowClass)
         pHintWindowClass.reset( new CHintWindowClass(hInstance, WindowProc, sizeof(CHintWindow *)) );

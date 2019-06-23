@@ -64,6 +64,8 @@ protected:
     void OnCommandHelp();
     void OnCommandExit();
 
+    void OnTaskbarCreated();
+
 private:
     PCWSTR m_wszApplicationName;
     CTrayWindow m_Window;

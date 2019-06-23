@@ -63,25 +63,32 @@ LRESULT CALLBACK CTrayApp::WndProc(
 {
     try
     {
-        switch (nMessage)
+        if (GetInstance(hWindow).m_Window.GetTaskbarCreatedMessage() == nMessage)
         {
-        case WM_DESTROY:
-            ::PostQuitMessage(ERROR_SUCCESS);
-            break;
-
-        case WM_COMMAND:
-            return GetInstance(hWindow).OnMessageCommand(wParam);
-
-        case Message::TrayIcon:
-            switch (lParam)
+            GetInstance(hWindow).OnTaskbarCreated();
+        }
+        else
+        {
+            switch (nMessage)
             {
-            case WM_RBUTTONUP:
-                return GetInstance(hWindow).OnMessageTrayIconRightClick();
+            case WM_DESTROY:
+                ::PostQuitMessage(ERROR_SUCCESS);
+                break;
 
-            case WM_LBUTTONDBLCLK:
-                return GetInstance(hWindow).OnMessageTrayIconLeftDoubleClick();
+            case WM_COMMAND:
+                return GetInstance(hWindow).OnMessageCommand(wParam);
+
+            case Message::TrayIcon:
+                switch (lParam)
+                {
+                case WM_RBUTTONUP:
+                    return GetInstance(hWindow).OnMessageTrayIconRightClick();
+
+                case WM_LBUTTONDBLCLK:
+                    return GetInstance(hWindow).OnMessageTrayIconLeftDoubleClick();
+                }
+                break;
             }
-            break;
         }
     }
     catch (const CError &Error)
@@ -185,14 +192,14 @@ void CTrayApp::OnCommandSoundOptions()
     WCHAR wszCommandLine[] = L"control.exe mmsys.cpl";
     const auto bProcessCreated = 
         ::CreateProcess(
-            NULL,
+            nullptr,
             wszCommandLine,
-            NULL,
-            NULL,
+            nullptr,
+            nullptr,
             FALSE,
             0,
-            NULL,
-            NULL,
+            nullptr,
+            nullptr,
             &StartupInfo,
             &ProcessInfo);
     if (!bProcessCreated)
@@ -215,6 +222,13 @@ void CTrayApp::OnCommandExit()
 {
     m_Icon.Delete();
     m_Window.Close();
+}
+
+// ----------------------------------------------------------------------------
+
+void CTrayApp::OnTaskbarCreated()
+{
+    m_Icon.Create(m_hInstance, m_wszApplicationName, m_Window, Message::TrayIcon);
 }
 
 // ----------------------------------------------------------------------------

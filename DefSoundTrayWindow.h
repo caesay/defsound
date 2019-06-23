@@ -14,7 +14,6 @@ namespace DefSound {
 class CTrayWindow
 {
 public:
-    CTrayWindow();
     ~CTrayWindow();
 
     static bool IsAlreadyExist(__in PCWSTR wszApplicationName);
@@ -32,8 +31,12 @@ public:
     void Close();
 
     operator HWND() const;
+
+    UINT GetTaskbarCreatedMessage() const;
+
 private:
-    HWND m_hWindow;
+    HWND m_hWindow = nullptr;
+    UINT m_nTaskbarCreatedMessage = 0;
 };
 
 // ----------------------------------------------------------------------------

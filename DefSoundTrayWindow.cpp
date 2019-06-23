@@ -24,13 +24,6 @@ const PCWSTR g_wszWindowClassName = L"{566116C6-5126-4E68-A3AE-71E132450148}";
 
 // ----------------------------------------------------------------------------
 
-CTrayWindow::CTrayWindow()
-    : m_hWindow(nullptr)
-{
-}
-
-// ----------------------------------------------------------------------------
-
 CTrayWindow::~CTrayWindow()
 {
     if (m_hWindow)
@@ -73,12 +66,16 @@ void CTrayWindow::Create(
             0,
             0,
             0,
-            NULL,
-            NULL,
-            NULL,
+            nullptr,
+            nullptr,
+            nullptr,
             this);
     if (!m_hWindow)
         throw CError( MakeDefaultErrorDescription(L"::CreateWindow") );
+
+    m_nTaskbarCreatedMessage = ::RegisterWindowMessage(L"TaskbarCreated");
+    if (!m_nTaskbarCreatedMessage)
+        throw CError( MakeDefaultErrorDescription(L"::RegisterWindowMessage") );
 }
 
 // ----------------------------------------------------------------------------
@@ -88,7 +85,7 @@ void CTrayWindow::RunMessageLoop()
     _ASSERT(m_hWindow);
 
     ::MSG Msg;
-    while (::GetMessage(&Msg, NULL, 0, 0))
+    while (::GetMessage(&Msg, nullptr, 0, 0))
     {
         ::TranslateMessage(&Msg);
         ::DispatchMessage(&Msg);
@@ -125,6 +122,13 @@ CTrayWindow::operator HWND() const
 {
     _ASSERT(m_hWindow);
     return m_hWindow;
+}
+
+// ----------------------------------------------------------------------------
+
+UINT CTrayWindow::GetTaskbarCreatedMessage() const
+{
+    return m_nTaskbarCreatedMessage;
 }
 
 // ----------------------------------------------------------------------------
